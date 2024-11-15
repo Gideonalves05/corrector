@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:14
+    container_name: Writing-Corrector-Container
+    environment:
+      POSTGRES_DB: writing-corrector_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+

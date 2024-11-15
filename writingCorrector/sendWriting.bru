@@ -1,0 +1,16 @@
+meta {
+  name: sendWriting
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:8080/api/corretor/correction
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  fileName: redacao.pdf
+  file: @file(/home/gideon/java-projects/redacao.pdf)
+}

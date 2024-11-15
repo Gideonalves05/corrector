@@ -1,0 +1,15 @@
+meta {
+  name: FindId
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:8080/users/search?email=johndoe@example.com
+  body: none
+  auth: none
+}
+
+params:query {
+  email: johndoe@example.com
+}

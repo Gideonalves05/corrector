@@ -1,0 +1,17 @@
+meta {
+  name: listUser
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:8080/users/user/6716dcd907cd2c0904964b78
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "gideon@gmail.com"
+  }
+}
