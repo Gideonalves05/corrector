@@ -1,0 +1,15 @@
+meta {
+  name: sendRequestService
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:8080/api/corrector/submit-pdf
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  file: @file(/home/gideon/java-projects/redacaoteste.pdf)
+}
