@@ -1,7 +1,9 @@
 package com.gideon.Writing_Corrector_API.controller.corrector;
 
+import com.gideon.Writing_Corrector_API.model.user.UserModel;
 import com.gideon.Writing_Corrector_API.service.corrector.PdfReaderService;
 import com.gideon.Writing_Corrector_API.service.corrector.correctorService;
+import com.gideon.Writing_Corrector_API.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/corrector")
@@ -22,38 +25,38 @@ public class correctorController {
     private final correctorService correctorService;
     private final PdfReaderService pdfReaderService;
 
+
     @Autowired
     public correctorController(correctorService correctorService, PdfReaderService pdfReaderService) {
         this.correctorService = correctorService;
         this.pdfReaderService = pdfReaderService;
+
     }
 
     @PostMapping(value = "/submit-pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ResponseEntity<?>> submitPdf(@RequestParam("file") MultipartFile file) {
+    public Mono<ResponseEntity<?>> submitPdf(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("userId") Long userId,
+            @RequestParam("title") String title) {
         return Mono.fromCallable(() -> {
-                    // Salvar arquivo temporário
+
+                    // Extrair texto do PDF
                     File tempFile = File.createTempFile("uploaded-", ".pdf");
                     file.transferTo(tempFile);
 
-                    // Extrair texto do PDF
                     String extractedText = pdfReaderService.extrairTextoDoPDF(tempFile.getAbsolutePath());
-
-                    System.out.println("Texto extraiodo" + extractedText);
-
-                    // Excluir arquivo temporárioa
                     tempFile.delete();
 
+                    // Salvar redação no banco
+                   UserModel user = UserService.getUserById(userId);
+                   correctorService.saveEssay(title, extractedText, user.orElse(null));
                     return extractedText;
 
                 })
                 .flatMap(extractedText ->
-                        // Obter o feedback da correção
                         correctorService.getCorrectionFeedback(extractedText)
-                                .collectList() // Converte o Flux<String> para List<String>
+                                .collectList()
                                 .map(feedbackList -> ResponseEntity.ok(Map.of("feedback", feedbackList)))
-
                 );
-
-
     }
 }

@@ -57,7 +57,7 @@ public class UserController {
 
     // Rota para atualizar um usuário existente
     @PutMapping("change/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable String id,  @RequestBody UserModel user) {
+    public ResponseEntity<?> updateUser(@PathVariable Long id,  @RequestBody UserModel user) {
         try {
             UserModel updatedUser = userService.updateUser(id, user);
             if (updatedUser != null) {
@@ -72,7 +72,7 @@ public class UserController {
 
     // Rota para deletar um usuário
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable String id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
             return new ResponseEntity<>("Usuário com ID " + id + " foi deletado com sucesso.", HttpStatus.NO_CONTENT);

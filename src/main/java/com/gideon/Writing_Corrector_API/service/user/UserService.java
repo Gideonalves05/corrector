@@ -21,8 +21,7 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-
-    public Optional<UserModel> getUserById(String id) {
+    public Optional<UserModel> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
@@ -30,22 +29,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public UserModel updateUser(String id, UserModel updatedUser) {
-        Optional<UserModel> userOptional = userRepository.findById(id);
-
-        if (userOptional.isPresent()) {
-            UserModel user = userOptional.get();
-            user.setFirstName(updatedUser.getFirstName());
-            user.setLastName(updatedUser.getLastName());
-            user.setEmail(updatedUser.getEmail());
-            user.setPassword(updatedUser.getPassword());
-            return userRepository.save(user);
-        } else {
-            return null; // Ou lançar uma exceção personalizada
-        }
+    public UserModel updateUser(Long id, UserModel updatedUser) {
+        return userRepository.findById(id).map(existingUser -> {
+            existingUser.setFirstName(updatedUser.getFirstName());
+            existingUser.setLastName(updatedUser.getLastName());
+            existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setPassword(updatedUser.getPassword());
+            return userRepository.save(existingUser);
+        }).orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
     }
 
-    public void deleteUser(String id) {
-        userRepository.deleteById(id);
+    public void deleteUser(Long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("User not found with ID: " + id);
+        }
     }
 }

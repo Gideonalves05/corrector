@@ -1,4 +1,4 @@
-package com.gideon.Writing_Corrector_API.model.essay;
+package com.gideon.Writing_Corrector_API.model.corrector;
 
 import com.gideon.Writing_Corrector_API.model.user.UserModel;
 import jakarta.persistence.*;
@@ -14,19 +14,22 @@ import java.time.LocalDateTime;
 public class Essay {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID) // Gera um UUID automaticamente
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, columnDefinition = "TEXT") // Para suportar textos longos
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Column(nullable = false)
     private LocalDateTime submissionDate;
 
     @ManyToOne // Relacionamento muitos-para-um
-    @JoinColumn(name = "user_id", nullable = false) // Cria a coluna de chave estrangeira
+    @JoinColumn(name = "user_id", nullable = false)
     private UserModel user;
+
+    @Column(columnDefinition = "TEXT")
+    private String feedback;
 }
