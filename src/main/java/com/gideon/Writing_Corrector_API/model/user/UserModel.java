@@ -21,9 +21,9 @@ public class UserModel {
 
 
     @Id
-    @GeneratedValue(generator = "NumberAccount")
+    @GeneratedValue(generator = "user_id")
     @Column(unique = true)
-    private Long numberAccount = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+    private Long userId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
 
     private String firstName;
 

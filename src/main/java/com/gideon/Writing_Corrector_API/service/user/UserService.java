@@ -21,8 +21,8 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public Optional<UserModel> getUserById(Long id) {
-        return userRepository.findById(id);
+    public Optional<UserModel> getUserById(Long userId) {
+        return userRepository.findById(userId);
     }
 
     public UserModel createUser(UserModel user) {

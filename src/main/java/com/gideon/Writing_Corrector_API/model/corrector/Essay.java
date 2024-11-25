@@ -28,7 +28,7 @@ public class Essay {
 
     @ManyToOne // Relacionamento muitos-para-um
     @JoinColumn(name = "user_id", nullable = false)
-    private UserModel user;
+    private UserModel userId;
 
     @Column(columnDefinition = "TEXT")
     private String feedback;

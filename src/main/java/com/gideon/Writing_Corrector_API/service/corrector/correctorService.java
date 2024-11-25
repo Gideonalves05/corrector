@@ -45,12 +45,12 @@ public class correctorService {
     }
 
 
-    public Essay saveEssay(String title, String content, UserModel user, String feedback) {
+    public Essay saveEssay(String title, String content, UserModel userId, String feedback) {
         Essay essay = Essay.builder()
                 .title(title)
                 .content(content)
                 .submissionDate(LocalDateTime.now())
-                .user(user)
+                .userId(userId)
                 .feedback(feedback)
                 .build();
         return essayRepository.save(essay);
