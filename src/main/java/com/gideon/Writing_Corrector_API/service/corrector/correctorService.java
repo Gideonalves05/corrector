@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -52,6 +54,14 @@ public class correctorService {
                 .feedback(feedback)
                 .build();
         return essayRepository.save(essay);
+    }
+
+    public List<Essay> getAllEssays() {
+        return essayRepository.findAll();
+    }
+
+    public Optional<Essay> getEssayById(String id) {
+        return essayRepository.findById(id);
     }
 
 }

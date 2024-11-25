@@ -1,5 +1,6 @@
 package com.gideon.Writing_Corrector_API.controller.corrector;
 
+import com.gideon.Writing_Corrector_API.model.corrector.Essay;
 import com.gideon.Writing_Corrector_API.model.user.UserModel;
 import com.gideon.Writing_Corrector_API.service.corrector.PdfReaderService;
 import com.gideon.Writing_Corrector_API.service.corrector.correctorService;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -58,4 +61,39 @@ public class correctorController {
                 );
     }
 
+    // Retorna o histórico de redações
+    @GetMapping("/history")
+    public ResponseEntity<List<Object>> getAllWritings() {
+        List<Object> writingsHistory = correctorService.getAllEssays()
+                .stream()
+                .map(essay -> {
+                    return new Object() {
+                        public final String id = essay.getId();
+                        public final String title = essay.getTitle();
+                        public final String createdAt = essay.getSubmissionDate().toString();
+                    };
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(writingsHistory);
+    }
+
+    // Retorna os detalhes de uma redação específica
+    @GetMapping("/details/{id}")
+    public ResponseEntity<?> getWritingDetails(@PathVariable String id) {
+        Optional<Essay> essayOptional = correctorService.getEssayById(id);
+
+        if (essayOptional.isPresent()) {
+            Essay essay = essayOptional.get();
+            return ResponseEntity.ok(new Object() {
+                public final String essayId = essay.getId();
+                public final String title = essay.getTitle();
+                public final String createdAt = essay.getSubmissionDate().toString();
+                public final String feedback = essay.getFeedback();
+                public final String content = essay.getContent();
+            });
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
